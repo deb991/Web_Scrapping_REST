@@ -1,8 +1,7 @@
 import os
-import urllib
 from urllib.request import urlopen
+from urllib.error import HTTPError, URLError
 import json
-from pprint import pprint
 
 '''Basic HTTP Get request using urllib.request'''
 def http_get():
@@ -52,19 +51,37 @@ def explore_response():
     with urlopen("https://example.com") as encode_response:
         src_data = encode_response.read()
         #print('Byte formatted response:\t', src_data)
+
         '''Getting Charset from header of the HTTPS message'''
         char_set = encode_response.headers.get_content_charset()
         print('Char_Set:\t', char_set)
         decode_response = src_data.decode(char_set)
         #print('\nDecoded response:\t', decode_response[:500])
-        '''from Bytes to File'''
-        with open("../res/http_message1.html", "wb") as msg_file:
-            msg_file.write(src_data)
 
+        '''from Bytes to File'''
+        with open("C:\\Users\\002CSC744\\Documents\\Web_Scrapping_REST\\res\\http_message1.html", "wb") as msg_file:
+            msg_file.write(src_data)
+            '''Going from Bytes to Dictionary'''
+            #json_data = json.loads(decode_response)
+            #print('Json data:\t', json_data)
+
+'''Exception Handling'''
+def make_request():
+    try:
+        with urlopen("https://example.com/") as input_data:
+            body = input_data.read()
+            print('Request Status:\t', input_data.status)
+    except HTTPError as error:
+        print(error.status, error.reason)
+    except URLError as error:
+        print(error.reason)
+    except TimeoutError as error:
+        print('\nRequest Time Out')
 
 if __name__ == '__main__':
     #http_get()
     #get_json()
     #get_http_msg()
     #response_close()
-    explore_response()
+    #explore_response()
+    make_request()
